@@ -5,12 +5,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const highScoreElement = document.getElementById('high-score');
     const startBtn = document.getElementById('start-btn');
     const pauseBtn = document.getElementById('pause-btn');
+
+    const upBtn = document.getElementById('up-btn');
+    const downBtn = document.getElementById('down-btn');
+    const leftBtn = document.getElementById('left-btn');
+    const rightBtn = document.getElementById('right-btn');
     
     const gridSize = 20;
     const tileCount = 20;
     canvas.width = gridSize * tileCount;
     canvas.height = gridSize * tileCount;
-    
+
     let snake = [];
     let food = {};
     let direction = 'right';
@@ -38,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
         scoreElement.textContent = score;
         gameSpeed = 150;
     }
-
+   
     function generateFood() {
         let validPosition = false;
         
@@ -57,12 +62,11 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     }
-
+    
     function gameUpdate() {
         if (isPaused) return;
         
         direction = nextDirection;
-        
         const head = {x: snake[0].x, y: snake[0].y};
         
         switch (direction) {
@@ -94,7 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (head.x === food.x && head.y === food.y) {
             score++;
             scoreElement.textContent = score;
-
+            
             if (score % 5 === 0 && gameSpeed > 50) {
                 gameSpeed -= 10;
                 clearInterval(gameLoop);
@@ -112,6 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function drawGame() {
         ctx.fillStyle = '#ecf0f1';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
         ctx.fillStyle = '#2ecc71';
         for (let segment of snake) {
             ctx.fillRect(
@@ -121,7 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 gridSize - 1
             );
         }
-
+        
         ctx.fillStyle = '#24A610';
         ctx.fillRect(
             snake[0].x * gridSize, 
@@ -138,7 +143,7 @@ document.addEventListener('DOMContentLoaded', () => {
             gridSize - 1
         );
     }
-
+    
     function gameOver() {
         gameRunning = false;
         clearInterval(gameLoop);
@@ -222,6 +227,22 @@ document.addEventListener('DOMContentLoaded', () => {
             ctx.fillText('Paused', canvas.width / 2, canvas.height / 2);
         }
     }
+
+    upBtn.addEventListener('click', () => {
+        if (gameStarted && direction !== 'down') nextDirection = 'up';
+    });
+    
+    downBtn.addEventListener('click', () => {
+        if (gameStarted && direction !== 'up') nextDirection = 'down';
+    });
+    
+    leftBtn.addEventListener('click', () => {
+        if (gameStarted && direction !== 'right') nextDirection = 'left';
+    });
+    
+    rightBtn.addEventListener('click', () => {
+        if (gameStarted && direction !== 'left') nextDirection = 'right';
+    });
 
     initGame();
     drawGame();
